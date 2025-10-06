@@ -103,42 +103,7 @@ def caesar_decrypt(text, key):
     return decrypted
 ```
 
-#### 7. Interfața utilizator
 
-Interfața permite alegerea operației, introducerea cheii și textului cu validări complete:
-
-```python
-def task_1_1():
-    print("\nChoose operation:")
-    print("1. Encryption")
-    print("2. Decryption")
-    
-    option = input("\nEnter option (1/2): ").strip()
-    if option not in ['1', '2']:
-        print("Invalid option. Choose '1' or '2'.")
-        return
-
-    try:
-        key = int(input("Enter key (1-25): "))
-        if key < 1 or key > 25:
-            print("Key must be between 1 and 25.")
-            return
-    except ValueError:
-        print("Key must be an integer.")
-        return
-
-    text = input("Enter text: ").replace(" ", "").upper()
-    if not validate_text(text):
-        print("Text can only contain letters A-Z or a-z.")
-        return
-
-    if option == '1':
-        result = caesar_encrypt(text, key)
-        print(f"Encrypted text: {result}")
-    else:
-        result = caesar_decrypt(text, key)
-        print(f"Decrypted text: {result}")
-```
 
 ---
 
@@ -239,33 +204,6 @@ if len(key2_cleaned) < 7:
 if not validate_text(key2_cleaned):
     print("Key 2 can only contain letters A-Z or a-z.")
     return
-```
-
-#### 5. Interfața completă pentru Task 1.2
-
-```python
-def task_1_2():
-    print("\nChoose operation:")
-    print("1. Encryption")
-    print("2. Decryption")
-    
-    option = input("\nEnter option (1/2): ").strip()
-    
-    key1 = int(input("Enter key 1 (1-25): "))
-    key2 = input("Enter key 2 (minimum 7 letters): ").strip()
-    
-    text = input("Enter text: ").replace(" ", "").upper()
-    
-    permuted_alphabet = generate_permuted_alphabet(key2)
-    print(f"Standard alphabet: {''.join(ALPHABET)}")
-    print(f"Permuted alphabet: {''.join(permuted_alphabet)}")
-    
-    if option == '1':
-        result = caesar_encrypt_permuted(text, key1, key2)
-        print(f"Encrypted text: {result}")
-    else:
-        result = caesar_decrypt_permuted(text, key1, key2)
-        print(f"Decrypted text: {result}")
 ```
 
 ---
