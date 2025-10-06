@@ -1,181 +1,201 @@
-def encode_letter(letter):
-    alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    
-    for i in range(26):
+ALPHABET = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+]
+
+def letter_to_index(letter, alphabet=None):
+    if alphabet is None:
+        alphabet = ALPHABET
+    for i in range(len(alphabet)):
         if alphabet[i] == letter:
             return i
     return -1
 
-def decode_letter(code):
-    alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    
-    if code >= 0 and code <= 25:
-        return alphabet[code]
-    return ''
+def index_to_letter(index, alphabet=None):
+    if alphabet is None:
+        alphabet = ALPHABET
+    return alphabet[index % 26]
 
-def to_uppercase(letter):
-    lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    uppercase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    
-    for i in range(26):
-        if lowercase[i] == letter:
-            return uppercase[i]
-    return letter
+def validate_text(text):
+    for c in text:
+        if c not in ALPHABET:
+            return False
+    return True
 
-def is_letter(char):
-    uppercase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+def generate_permuted_alphabet(key2):
+    key2_cleaned = key2.replace(" ", "").upper()
+    permuted_alphabet = []
     
-    for letter in uppercase:
-        if char == letter:
-            return True
-    for letter in lowercase:
-        if char == letter:
-            return True
-    return False
+    for c in key2_cleaned:
+        if c in ALPHABET and c not in permuted_alphabet:
+            permuted_alphabet.append(c)
+    
+    for c in ALPHABET:
+        if c not in permuted_alphabet:
+            permuted_alphabet.append(c)
+    
+    return permuted_alphabet
 
-def prepare_text(text):
-    cleaned_text = ""
-    for character in text:
-        if character != ' ':
-            if is_letter(character):
-                cleaned_text += to_uppercase(character)
-    return cleaned_text
+def caesar_encrypt(text, key):
+    encrypted = ''
+    for c in text:
+        pos = letter_to_index(c)
+        new_pos = (pos + key) % 26
+        encrypted += index_to_letter(new_pos)
+    return encrypted
 
-def encrypt(text, key):
-    result = ""
-    text = prepare_text(text)
-    
-    for i in range(len(text)):
-        letter = text[i]
-        code = encode_letter(letter)
-        
-        if code != -1:
-            new_code = (code + key) % 26
-            result += decode_letter(new_code)
-    
-    return result
+def caesar_decrypt(text, key):
+    decrypted = ''
+    for c in text:
+        pos = letter_to_index(c)
+        new_pos = (pos - key) % 26
+        decrypted += index_to_letter(new_pos)
+    return decrypted
 
-def decrypt(text, key):
-    result = ""
-    text = prepare_text(text)
+def caesar_encrypt_permuted(text, key1, key2):
+    permuted_alphabet = generate_permuted_alphabet(key2)
+    encrypted = ''
     
-    for i in range(len(text)):
-        letter = text[i]
-        code = encode_letter(letter)
-        
-        if code != -1:
-            new_code = (code - key) % 26
-            result += decode_letter(new_code)
+    for c in text:
+        standard_pos = letter_to_index(c, ALPHABET)
+        new_pos = (standard_pos + key1) % 26
+        encrypted += permuted_alphabet[new_pos]
     
-    return result
+    return encrypted
 
-def validate_key(key_str):
-    digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+def caesar_decrypt_permuted(text, key1, key2):
+    permuted_alphabet = generate_permuted_alphabet(key2)
+    decrypted = ''
     
-    if len(key_str) == 0:
-        return False, 0
+    for c in text:
+        permuted_pos = letter_to_index(c, permuted_alphabet)
+        standard_pos = (permuted_pos - key1) % 26
+        decrypted += ALPHABET[standard_pos]
     
-    for char in key_str:
-        is_digit = False
-        for digit in digits:
-            if char == digit:
-                is_digit = True
-                break
-        if not is_digit:
-            return False, 0
+    return decrypted
+
+def task_1_1():
+    print("\n" + "="*60)
+    print("TASK 1.1 - Simple Caesar Cipher")
+    print("="*60)
     
-    key = 0
-    for char in key_str:
-        for i in range(10):
-            if char == digits[i]:
-                key = key * 10 + i
-                break
+    print("\nChoose operation:")
+    print("1. Encryption")
+    print("2. Decryption")
     
-    if key >= 1 and key <= 25:
-        return True, key
+    option = input("\nEnter option (1/2): ").strip()
+    if option not in ['1', '2']:
+        print("Invalid option. Choose '1' or '2'.")
+        return
+
+    try:
+        key = int(input("Enter key (1-25): "))
+        if key < 1 or key > 25:
+            print("Key must be between 1 and 25.")
+            return
+    except ValueError:
+        print("Key must be an integer.")
+        return
+
+    text = input("Enter text: ").replace(" ", "").upper()
+    if not validate_text(text):
+        print("Text can only contain letters A-Z or a-z.")
+        return
+
+    print("\n" + "-"*60)
+    if option == '1':
+        result = caesar_encrypt(text, key)
+        print(f"Original text:  {text}")
+        print(f"Key:            {key}")
+        print(f"Encrypted text: {result}")
     else:
-        return False, 0
+        result = caesar_decrypt(text, key)
+        print(f"Ciphertext:     {text}")
+        print(f"Key:            {key}")
+        print(f"Decrypted text: {result}")
+    print("-"*60)
+
+def task_1_2():
+    print("\n" + "="*60)
+    print("TASK 1.2 - Caesar Cipher with Permutation")
+    print("="*60)
+    
+    print("\nChoose operation:")
+    print("1. Encryption")
+    print("2. Decryption")
+    
+    option = input("\nEnter option (1/2): ").strip()
+    if option not in ['1', '2']:
+        print("Invalid option. Choose '1' or '2'.")
+        return
+
+    try:
+        key1 = int(input("Enter key 1 (1-25): "))
+        if key1 < 1 or key1 > 25:
+            print("Key 1 must be between 1 and 25.")
+            return
+    except ValueError:
+        print("Key 1 must be an integer.")
+        return
+
+    key2 = input("Enter key 2 (minimum 7 letters): ").strip()
+    key2_cleaned = key2.replace(" ", "").upper()
+    
+    if len(key2_cleaned) < 7:
+        print("Key 2 must have at least 7 characters.")
+        return
+    
+    if not validate_text(key2_cleaned):
+        print("Key 2 can only contain letters A-Z or a-z.")
+        return
+
+    text = input("Enter text: ").replace(" ", "").upper()
+    if not validate_text(text):
+        print("Text can only contain letters A-Z or a-z.")
+        return
+
+    permuted_alphabet = generate_permuted_alphabet(key2)
+    alphabet_str = ''.join(permuted_alphabet)
+
+    print("\n" + "-"*60)
+    print(f"Standard alphabet: {''.join(ALPHABET)}")
+    print(f"Permuted alphabet: {alphabet_str}")
+    print("-"*60)
+    
+    if option == '1':
+        result = caesar_encrypt_permuted(text, key1, key2)
+        print(f"Original text:    {text}")
+        print(f"Key 1:            {key1}")
+        print(f"Key 2:            {key2}")
+        print(f"Encrypted text:   {result}")
+    else:
+        result = caesar_decrypt_permuted(text, key1, key2)
+        print(f"Ciphertext:       {text}")
+        print(f"Key 1:            {key1}")
+        print(f"Key 2:            {key2}")
+        print(f"Decrypted text:   {result}")
+    print("-"*60)
 
 def main_menu():
-    print("=" * 50)
-    print("CAESAR CIPHER - ENCRYPTION/DECRYPTION PROGRAM")
-    print("=" * 50)
-    
     while True:
-        print("\nChoose operation:")
-        print("1. Encryption")
-        print("2. Decryption")
-        print("3. Exit")
+        print("\n" + "="*60)
+        print("CAESAR CIPHER - LABORATORY 1")
+        print("="*60)
+        print("\n1. Task 1.1 - Simple Caesar")
+        print("2. Task 1.2 - Caesar with permutation")
+        print("0. Exit")
         
-        option = input("\nEnter option (1/2/3): ")
+        option = input("\nChoose option (0-2): ").strip()
         
-        if option == '3':
+        if option == '0':
             print("Goodbye!")
             break
-        
-        if option != '1' and option != '2':
-            print("Invalid option! Choose 1, 2 or 3.")
-            continue
-        
-        while True:
-            key_input = input("\nEnter key (1-25): ")
-            valid, key = validate_key(key_input)
-            
-            if valid:
-                break
-            else:
-                print("Invalid key! Enter a number between 1 and 25.")
-        
-        if option == '1':
-            text = input("\nEnter message to encrypt: ")
-            processed_text = prepare_text(text)
-            result = encrypt(text, key)
-            
-            print("\n" + "-" * 50)
-            print("ENCRYPTION RESULTS:")
-            print("-" * 50)
-            print("Original text: " + text)
-            print("Processed text: " + processed_text)
-            print("Key: " + str(key))
-            print("Ciphertext: " + result)
-            print("-" * 50)
-        
+        elif option == '1':
+            task_1_1()
+        elif option == '2':
+            task_1_2()
         else:
-            text = input("\nEnter ciphertext to decrypt: ")
-            processed_text = prepare_text(text)
-            result = decrypt(text, key)
-            
-            print("\n" + "-" * 50)
-            print("DECRYPTION RESULTS:")
-            print("-" * 50)
-            print("Ciphertext: " + processed_text)
-            print("Key: " + str(key))
-            print("Decrypted message: " + result)
-            print("-" * 50)
-
-def test_example():
-    print("TEST EXAMPLE:")
-    print("-" * 50)
-    text = "ATTACK AT ONCE"
-    key = 4
-    print("Text: " + text)
-    print("Key: " + str(key))
-    
-    ciphertext = encrypt(text, key)
-    print("Ciphertext: " + ciphertext)
-    
-    decrypted = decrypt(ciphertext, key)
-    print("Decrypted text: " + decrypted)
-    print("-" * 50)
-    print()
+            print("Invalid option!")
 
 if __name__ == "__main__":
-    test_example()
     main_menu()
