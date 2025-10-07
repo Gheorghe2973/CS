@@ -1,8 +1,4 @@
-# Laborator 1 - Cifrul Caesar
-
-**Deadline:** Extension due date Wednesday, 8 October 2025, 11:59 PM
-
----
+# Laborator 1
 
 ## Sarcina 1.1 - Implementarea algoritmului Caesar simplu
 
@@ -57,15 +53,19 @@ def validate_text(text):
 #### 4. Formulele de criptare și decriptare
 
 **Formula de criptare:**
+
 ```
 c = (m + k) mod 26
 ```
+
 unde:
+
 - `m` = poziția literei în alfabet (0-25)
 - `k` = cheia (1-25)
 - `c` = poziția literei criptate
 
 **Formula de decriptare:**
+
 ```
 m = (c - k) mod 26
 ```
@@ -83,6 +83,7 @@ def caesar_encrypt(text, key):
 ```
 
 **Exemplu:**
+
 - Text: `HELLO`, Cheie: `3`
 - `H` (7) → (7+3) mod 26 = 10 → `K`
 - `E` (4) → (4+3) mod 26 = 7 → `H`
@@ -103,8 +104,6 @@ def caesar_decrypt(text, key):
     return decrypted
 ```
 
-
-
 ---
 
 ## Sarcina 1.2 - Caesar cu permutare (2 chei)
@@ -123,19 +122,20 @@ Alfabetul permutat se creează plasând literele din `key2` la început (fără 
 def generate_permuted_alphabet(key2):
     key2_cleaned = key2.replace(" ", "").upper()
     permuted_alphabet = []
-    
+  
     for c in key2_cleaned:
         if c in ALPHABET and c not in permuted_alphabet:
             permuted_alphabet.append(c)
-    
+  
     for c in ALPHABET:
         if c not in permuted_alphabet:
             permuted_alphabet.append(c)
-    
+  
     return permuted_alphabet
 ```
 
 **Exemplu:**
+
 - `key2 = "cryptography"`
 - Alfabet standard: `ABCDEFGHIJKLMNOPQRSTUVWXYZ`
 - Alfabet permutat: `CRYPTOGAHBDEFIJKLMNQSUVWXZ`
@@ -143,6 +143,7 @@ def generate_permuted_alphabet(key2):
 #### 2. Formula de criptare cu permutare
 
 **Procesul:**
+
 1. Găsește poziția literei în alfabetul **standard**: `pos_standard`
 2. Aplică deplasarea: `new_pos = (pos_standard + k1) mod 26`
 3. Ia litera de la poziția `new_pos` din alfabetul **permutat**
@@ -151,16 +152,17 @@ def generate_permuted_alphabet(key2):
 def caesar_encrypt_permuted(text, key1, key2):
     permuted_alphabet = generate_permuted_alphabet(key2)
     encrypted = ''
-    
+  
     for c in text:
         standard_pos = letter_to_index(c, ALPHABET)
         new_pos = (standard_pos + key1) % 26
         encrypted += permuted_alphabet[new_pos]
-    
+  
     return encrypted
 ```
 
 **Exemplu:**
+
 - Text: `ABC`, key1: `3`, key2: `cryptography`
 - Alfabet permutat: `CRYPTOGAHBDEFIJKLMNQSUVWXZ`
 
@@ -174,6 +176,7 @@ Rezultat: "PTO"
 #### 3. Formula de decriptare cu permutare
 
 **Procesul:**
+
 1. Găsește poziția literei în alfabetul **permutat**: `pos_permuted`
 2. Aplică deplasarea inversă: `standard_pos = (pos_permuted - k1) mod 26`
 3. Ia litera de la poziția `standard_pos` din alfabetul **standard**
@@ -182,12 +185,12 @@ Rezultat: "PTO"
 def caesar_decrypt_permuted(text, key1, key2):
     permuted_alphabet = generate_permuted_alphabet(key2)
     decrypted = ''
-    
+  
     for c in text:
         permuted_pos = letter_to_index(c, permuted_alphabet)
         standard_pos = (permuted_pos - key1) % 26
         decrypted += ALPHABET[standard_pos]
-    
+  
     return decrypted
 ```
 
@@ -216,9 +219,9 @@ def main_menu():
         print("\n1. Task 1.1 - Simple Caesar")
         print("2. Task 1.2 - Caesar with permutation")
         print("0. Exit")
-        
+      
         option = input("\nChoose option (0-2): ").strip()
-        
+      
         if option == '0':
             print("Goodbye!")
             break
