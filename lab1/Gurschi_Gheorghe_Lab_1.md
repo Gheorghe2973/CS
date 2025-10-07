@@ -219,9 +219,9 @@ def main_menu():
         print("\n1. Task 1.1 - Simple Caesar")
         print("2. Task 1.2 - Caesar with permutation")
         print("0. Exit")
-      
+    
         option = input("\nChoose option (0-2): ").strip()
-      
+    
         if option == '0':
             print("Goodbye!")
             break
@@ -241,3 +241,5 @@ if __name__ == "__main__":
 ## Concluzie
 
 Laboratul a fost implementat cu succes în Python, respectând toate cerințele specificate în sarcini. Algoritmul Caesar a fost implementat pentru ambele variante - simplu și cu permutare.
+
+**\*\***Repository GitHub:**\*\*** **[**https://github.com/Gheorghe2973/CS**](**https://github.com/Gheorghe2973/CS**)**

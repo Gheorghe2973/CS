@@ -151,9 +151,4 @@ Lucrarea de laborator a demonstrat:
 
 Cifrurile monoalfabetice, deși istorice și educaționale, nu oferă securitate suficientă pentru aplicații moderne. Această lucrare evidențiază importanța înțelegerii fundamentelor criptografiei pentru aprecierea complexității sistemelor moderne de securitate.
 
-## Bibliografie
-
-1. Kahn, D. (1967). *The Codebreakers: The Story of Secret Writing*
-2. Singh, S. (1999). *The Code Book: The Science of Secrecy from Ancient Egypt to Quantum Cryptography*
-3. Materialele cursului de Securitate Informațională
-4. https://crypto.interactive-maths.com - Crypto Corner Tool
+**\*\***Repository GitHub:**\*\*** **[**https://github.com/Gheorghe2973/CS**](**https://github.com/Gheorghe2973/CS**)**
