@@ -1,9 +1,5 @@
 # Laborator 1 - Cifrul Caesar
 
-**Deadline:** Extension due date Wednesday, 8 October 2025, 11:59 PM
-
----
-
 ## Sarcina 1.1 - Implementarea algoritmului Caesar simplu
 
 ### Descrierea sarcinii
@@ -57,15 +53,19 @@ def validate_text(text):
 #### 4. Formulele de criptare și decriptare
 
 **Formula de criptare:**
+
 ```
 c = (m + k) mod 26
 ```
+
 unde:
-- `m` = poziția literei în alfabet (0-25)
-- `k` = cheia (1-25)
-- `c` = poziția literei criptate
+
+* `m` = poziția literei în alfabet (0-25)
+* `k` = cheia (1-25)
+* `c` = poziția literei criptate
 
 **Formula de decriptare:**
+
 ```
 m = (c - k) mod 26
 ```
@@ -82,15 +82,6 @@ def caesar_encrypt(text, key):
     return encrypted
 ```
 
-**Exemplu:**
-- Text: `HELLO`, Cheie: `3`
-- `H` (7) → (7+3) mod 26 = 10 → `K`
-- `E` (4) → (4+3) mod 26 = 7 → `H`
-- `L` (11) → (11+3) mod 26 = 14 → `O`
-- `L` (11) → (11+3) mod 26 = 14 → `O`
-- `O` (14) → (14+3) mod 26 = 17 → `R`
-- Rezultat: `KHOOR`
-
 #### 6. Implementarea decriptării
 
 ```python
@@ -103,7 +94,67 @@ def caesar_decrypt(text, key):
     return decrypted
 ```
 
+### Teste și rezultate - Sarcina 1.1
 
+#### Test 1: Criptare cu cheia 7
+
+**Input:**
+
+* Operație: Criptare
+* Cheie: 7
+* Text: `asdasd`
+
+**Procesul de criptare:**
+
+```
+Text original (transformat): ASDASD
+
+A (poziție 0)  → (0 + 7) mod 26 = 7  → H
+S (poziție 18) → (18 + 7) mod 26 = 25 → Z
+D (poziție 3)  → (3 + 7) mod 26 = 10 → K
+A (poziție 0)  → (0 + 7) mod 26 = 7  → H
+S (poziție 18) → (18 + 7) mod 26 = 25 → Z
+D (poziție 3)  → (3 + 7) mod 26 = 10 → K
+```
+
+**Output:**
+
+```
+Original text:  ASDASD
+Key:            7
+Encrypted text: HZKHZK
+```
+
+#### Test 2: Decriptare cu cheia 7
+
+**Input:**
+
+* Operație: Decriptare
+* Cheie: 7
+* Text: `hzkhzk`
+
+**Procesul de decriptare:**
+
+```
+Text cifrat (transformat): HZKHZK
+
+H (poziție 7)  → (7 - 7) mod 26 = 0  → A
+Z (poziție 25) → (25 - 7) mod 26 = 18 → S
+K (poziție 10) → (10 - 7) mod 26 = 3  → D
+H (poziție 7)  → (7 - 7) mod 26 = 0  → A
+Z (poziție 25) → (25 - 7) mod 26 = 18 → S
+K (poziție 10) → (10 - 7) mod 26 = 3  → D
+```
+
+**Output:**
+
+```
+Ciphertext:     HZKHZK
+Key:            7
+Decrypted text: ASDASD
+```
+
+**Verificare:** Textul decriptat coincide cu textul original → ✓ Corect
 
 ---
 
@@ -123,26 +174,22 @@ Alfabetul permutat se creează plasând literele din `key2` la început (fără 
 def generate_permuted_alphabet(key2):
     key2_cleaned = key2.replace(" ", "").upper()
     permuted_alphabet = []
-    
+  
     for c in key2_cleaned:
         if c in ALPHABET and c not in permuted_alphabet:
             permuted_alphabet.append(c)
-    
+  
     for c in ALPHABET:
         if c not in permuted_alphabet:
             permuted_alphabet.append(c)
-    
+  
     return permuted_alphabet
 ```
-
-**Exemplu:**
-- `key2 = "cryptography"`
-- Alfabet standard: `ABCDEFGHIJKLMNOPQRSTUVWXYZ`
-- Alfabet permutat: `CRYPTOGAHBDEFIJKLMNQSUVWXZ`
 
 #### 2. Formula de criptare cu permutare
 
 **Procesul:**
+
 1. Găsește poziția literei în alfabetul **standard**: `pos_standard`
 2. Aplică deplasarea: `new_pos = (pos_standard + k1) mod 26`
 3. Ia litera de la poziția `new_pos` din alfabetul **permutat**
@@ -151,29 +198,19 @@ def generate_permuted_alphabet(key2):
 def caesar_encrypt_permuted(text, key1, key2):
     permuted_alphabet = generate_permuted_alphabet(key2)
     encrypted = ''
-    
+  
     for c in text:
         standard_pos = letter_to_index(c, ALPHABET)
         new_pos = (standard_pos + key1) % 26
         encrypted += permuted_alphabet[new_pos]
-    
+  
     return encrypted
-```
-
-**Exemplu:**
-- Text: `ABC`, key1: `3`, key2: `cryptography`
-- Alfabet permutat: `CRYPTOGAHBDEFIJKLMNQSUVWXZ`
-
-```
-'A': poziție standard = 0 → (0+3) mod 26 = 3 → permutat[3] = 'P'
-'B': poziție standard = 1 → (1+3) mod 26 = 4 → permutat[4] = 'T'
-'C': poziție standard = 2 → (2+3) mod 26 = 5 → permutat[5] = 'O'
-Rezultat: "PTO"
 ```
 
 #### 3. Formula de decriptare cu permutare
 
 **Procesul:**
+
 1. Găsește poziția literei în alfabetul **permutat**: `pos_permuted`
 2. Aplică deplasarea inversă: `standard_pos = (pos_permuted - k1) mod 26`
 3. Ia litera de la poziția `standard_pos` din alfabetul **standard**
@@ -182,12 +219,12 @@ Rezultat: "PTO"
 def caesar_decrypt_permuted(text, key1, key2):
     permuted_alphabet = generate_permuted_alphabet(key2)
     decrypted = ''
-    
+  
     for c in text:
         permuted_pos = letter_to_index(c, permuted_alphabet)
         standard_pos = (permuted_pos - key1) % 26
         decrypted += ALPHABET[standard_pos]
-    
+  
     return decrypted
 ```
 
@@ -206,6 +243,71 @@ if not validate_text(key2_cleaned):
     return
 ```
 
+### Teste și rezultate - Sarcina 1.2
+
+#### Test 3: Criptare cu permutare
+
+**Input:**
+
+* Operație: Criptare
+* Cheie 1: 7
+* Cheie 2: `cryptog`
+* Text: `asdasd`
+
+**Generarea alfabetului permutat:**
+
+```
+Key 2 original: "cryptog"
+Key 2 procesat: "CRYPTOG" (lungime = 7, valid ✓)
+
+Litere unice din key2: C, R, Y, P, T, O, G
+Litere rămase: A, B, D, E, F, H, I, J, K, L, M, N, Q, S, U, V, W, X, Z
+
+Alfabet standard: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+Alfabet permutat: CRYPTOGABDEFHIJKLMNQSUVWXZ
+```
+
+**Procesul de criptare:**
+
+```
+Text original (transformat): ASDASD
+
+A (poziție standard 0)  → (0 + 7) mod 26 = 7  → permutat[7] = A
+S (poziție standard 18) → (18 + 7) mod 26 = 25 → permutat[25] = Z
+D (poziție standard 3)  → (3 + 7) mod 26 = 10 → permutat[10] = E
+A (poziție standard 0)  → (0 + 7) mod 26 = 7  → permutat[7] = A
+S (poziție standard 18) → (18 + 7) mod 26 = 25 → permutat[25] = Z
+D (poziție standard 3)  → (3 + 7) mod 26 = 10 → permutat[10] = E
+```
+
+**Output:**
+
+```
+Standard alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+Permuted alphabet: CRYPTOGABDEFHIJKLMNQSUVWXZ
+
+Original text:    ASDASD
+Key 1:            7
+Key 2:            cryptog
+Encrypted text:   AZEAZE
+```
+
+#### Test 4: Validare cheie 2 incorectă
+
+**Input:**
+
+* Operație: Decriptare
+* Cheie 1: 7
+* Cheie 2: `azeaze` (lungime = 6)
+
+**Output:**
+
+```
+Key 2 must have at least 7 characters.
+```
+
+**Verificare:** Programul validează corect lungimea minimă a cheii 2 → ✓ Corect
+
 ---
 
 ## Structura completă a programului
@@ -213,12 +315,15 @@ if not validate_text(key2_cleaned):
 ```python
 def main_menu():
     while True:
-        print("\n1. Task 1.1 - Simple Caesar")
+        print("\n" + "="*60)
+        print("CAESAR CIPHER - LABORATORY 1")
+        print("="*60)
+        print("1. Task 1.1 - Simple Caesar")
         print("2. Task 1.2 - Caesar with permutation")
         print("0. Exit")
-        
-        option = input("\nChoose option (0-2): ").strip()
-        
+  
+        option = input("Choose option (0-2): ").strip()
+  
         if option == '0':
             print("Goodbye!")
             break
@@ -235,6 +340,20 @@ if __name__ == "__main__":
 
 ---
 
+## Analiză comparativă
+
+### Cifrul Caesar simplu vs. cu permutare
+
+
+| Caracteristică     | Caesar simplu    | Caesar cu permutare       |
+| ------------------- | ---------------- | ------------------------- |
+| **Număr de chei**  | 1 (deplasare)    | 2 (deplasare + permutare) |
+| **Spațiu de chei** | 25 variante      | 25 × 26! variante        |
+| **Securitate**      | Scăzută        | Moderată                 |
+| **Exemplu**         | ASDASD → HZKHZK | ASDASD → AZEAZE          |
+
 ## Concluzie
 
-Laboratul a fost implementat cu succes în Python, respectând toate cerințele specificate în sarcini. Algoritmul Caesar a fost implementat pentru ambele variante - simplu și cu permutare.
+Laboratul a fost implementat cu succes în Python, respectând toate cerințele specificate. Ambele variante ale algoritmului Caesar (simplu și cu permutare) au fost testate și validate. Programul include validări pentru chei, transformare automată în majuscule, eliminare spații și o interfață utilizator intuitivă. Testele efectuate confirmă corectitudinea implementării pentru toate operațiile de criptare și decriptare.
+
+**Repository GitHub:**[https://github.com/Gheorghe2973/CS](https://github.com/Gheorghe2973/CS)
