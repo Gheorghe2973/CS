@@ -14,15 +14,6 @@ Cifrurile monoalfabetice reprezintă sisteme de criptare în care fiecare liter�
 
 ### 2.2. Analiza frecvenței literelor
 
-Fiecare limbă naturală are o distribuție caracteristică a frecvenței de apariție a literelor. Pentru limba română, cele mai frecvente litere sunt:
-
-- **E** (11,47%)
-- **I** și **A** (aproximativ 9,95-9,96%)
-- **R** (6,82%)
-- **N** (6,47%)
-- **U** (6,20%)
-- **T** (6,04%)
-
 Pentru limba engleză, distribuția este:
 
 - **E** (12,7%)
@@ -75,21 +66,14 @@ După introducerea textului criptat, aplicația a calculat frecvențele de apari
 
 **Figura 2**: Tabelul frecvențelor literelor din textul criptat comparat cu frecvențele standard ale limbii engleze
 
-Din analiza tabelului observăm:
-
-- Literele cele mai frecvente în textul criptat necesită o comparație cu literele E, T, A, O, I, N din limba engleză
-- Diferențele între frecvențe permit identificarea probabilă a corespondenței între litere
-- Abaterea de la frecvențele standard poate indica lungimea insuficientă a textului sau caracteristici particulare ale mesajului
-
 ### 3.3. Procesul de decodificare
 
 Procesul de decodificare a urmat următorii pași:
 
-1. **Identificarea literei E**: Litera cea mai frecventă în textul criptat a fost presupusă a corespunde lui "e"
-2. **Identificarea digrafelor**: Secvențe frecvente de tip "X*E" au fost analizate pentru identificarea lui "THE"
-3. **Substituții iterative**: Pe baza cuvintelor parțial descifrate, am identificat treptat alte litere
-4. **Verificarea consistenței**: Fiecare substituție a fost verificată în contextul întregului mesaj
-5. **Completarea alfabetului**: Literele rămase au fost deduse din contextul cuvintelor descifrate
+1. **Identificarea literei E**: Litera cea mai frecventă în textul criptat a fost presupusă a corespunde lui "e" si la fel cu litera "w" care aminlocuit cu "t"
+2. **Identificarea digrafelor**: Secvențe frecvente de tip "t*e" au fost analizate pentru identificarea lui "THE" si o fost schimbata la "Q", "Rith" o fost schimbat in "with", aparitia multor "Tt"/"T"/"Tn" care ne duce la litera "a", "anO" in "and", "tNN" care duce in 'too', "tiZe" in "time" dic cauza contextului, "smaSS" in "small", "essentialF" in "essentialy"\,  aparitia dese a "oC" ce duce la "oF", "faI" este "far", "yeaI" in "year", "seHret" in "secret, "imUortant" in "important"
+3. **Verificarea consistenței**: Fiecare substituție a fost verificată în contextul întregului mesaj
+4. **Completarea alfabetului**: Literele rămase au fost deduse din contextul cuvintelor descifrate
 
 ## 4. Rezultate și observații
 
@@ -141,13 +125,6 @@ thomas jefferson. he called it his "wheel cypher," and it seemslikely that he in
 either during 1790 to 1793 or during 1797 to1800.
 
 ## 5. Concluzii
-
-Lucrarea de laborator a demonstrat:
-
-1. **Vulnerabilitatea intrinsecă** a cifrurilor monoalfabetice în fața atacurilor bazate pe analiza frecvențelor
-2. **Importanța lungimii textului** pentru succesul criptanalizei
-3. **Necesitatea unor sisteme criptografice mai complexe** (policifre, cifruri moderne) pentru asigurarea securității reale
-4. **Valoarea abordării metodice** în procesul de criptanaliză
 
 Cifrurile monoalfabetice, deși istorice și educaționale, nu oferă securitate suficientă pentru aplicații moderne. Această lucrare evidențiază importanța înțelegerii fundamentelor criptografiei pentru aprecierea complexității sistemelor moderne de securitate.
 
