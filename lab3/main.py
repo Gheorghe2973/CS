@@ -67,7 +67,7 @@ def prepare_text(text):
     text = text.upper().replace(' ', '')
     
     if not validate_input(text):
-        raise ValueError("Textul conține caractere invalide! Folosiți doar A-Z, Ă, Â, Î, Ș, Ț")
+        raise ValueError("Textul conține caractere invalide! Folosiți doar A-Z, Ă, Â, Ș, Ț")
     
     pairs = []
     i = 0
