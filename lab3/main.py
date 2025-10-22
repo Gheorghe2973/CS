@@ -1,5 +1,5 @@
 ALPHABET = [
-    'A', 'Ă', 'Â', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'Î', 'J',
+    'A', 'Ă', 'Â', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
     'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'Ș', 'T', 'Ț', 'U',
     'V', 'W', 'X', 'Y', 'Z'
 ]
@@ -44,8 +44,8 @@ def create_matrix(key):
     matrix = []
     for i in range(5):
         row = []
-        for j in range(7):
-            idx = i * 7 + j
+        for j in range(6):
+            idx = i * 6 + j
             if idx < len(matrix_chars):
                 row.append(matrix_chars[idx])
             else:
@@ -74,15 +74,37 @@ def prepare_text(text):
     while i < len(text):
         if i == len(text) - 1:
             pairs.append(text[i] + 'X')
-            i += 1
+            break
         elif text[i] == text[i + 1]:
             pairs.append(text[i] + 'X')
             i += 1
         else:
-            pairs.append(text[i:i+2])
+            pairs.append(text[i] + text[i + 1])
             i += 2
     
     return pairs
+
+
+def clean_decrypted_text(text):
+    result = ""
+    i = 0
+    while i < len(text):
+        if i < len(text) - 1:
+            if text[i + 1] == 'X' and (i + 2 >= len(text) or text[i] == text[i + 2]):
+                result += text[i]
+                i += 2
+            else:
+                result += text[i]
+                i += 1
+        else:
+            if text[i] != 'X':
+                result += text[i]
+            i += 1
+    
+    if result.endswith('X'):
+        result = result[:-1]
+    
+    return result
 
 
 def encrypt_pair(matrix, pair):
@@ -99,19 +121,42 @@ def encrypt_pair(matrix, pair):
     if row1 == row2:
         new_col1 = (col1 + 1) % 7
         new_col2 = (col2 + 1) % 7
-        while new_col1 < 7 and matrix[row1][new_col1] == '':
+        
+        while matrix[row1][new_col1] == '':
             new_col1 = (new_col1 + 1) % 7
-        while new_col2 < 7 and matrix[row2][new_col2] == '':
+        while matrix[row2][new_col2] == '':
             new_col2 = (new_col2 + 1) % 7
+            
         return matrix[row1][new_col1] + matrix[row2][new_col2]
     
     elif col1 == col2:
         new_row1 = (row1 + 1) % 5
         new_row2 = (row2 + 1) % 5
+        
+        while matrix[new_row1][col1] == '':
+            new_row1 = (new_row1 + 1) % 5
+        while matrix[new_row2][col2] == '':
+            new_row2 = (new_row2 + 1) % 5
+            
         return matrix[new_row1][col1] + matrix[new_row2][col2]
     
     else:
-        return matrix[row1][col2] + matrix[row2][col1]
+        result1 = matrix[row1][col2]
+        result2 = matrix[row2][col1]
+        
+        if result1 == '':
+            for r in range(5):
+                if matrix[r][col2] != '':
+                    result1 = matrix[r][col2]
+                    break
+        
+        if result2 == '':
+            for r in range(5):
+                if matrix[r][col1] != '':
+                    result2 = matrix[r][col1]
+                    break
+        
+        return result1 + result2
 
 
 def decrypt_pair(matrix, pair):
@@ -126,21 +171,44 @@ def decrypt_pair(matrix, pair):
     row2, col2 = pos2
     
     if row1 == row2:
-        new_col1 = (col1 - 1) % 7
-        new_col2 = (col2 - 1) % 7
-        while new_col1 >= 0 and matrix[row1][new_col1] == '':
-            new_col1 = (new_col1 - 1) % 7
-        while new_col2 >= 0 and matrix[row2][new_col2] == '':
-            new_col2 = (new_col2 - 1) % 7
+        new_col1 = (col1 - 1 + 7) % 7
+        new_col2 = (col2 - 1 + 7) % 7
+        
+        while matrix[row1][new_col1] == '':
+            new_col1 = (new_col1 - 1 + 7) % 7
+        while matrix[row2][new_col2] == '':
+            new_col2 = (new_col2 - 1 + 7) % 7
+        
         return matrix[row1][new_col1] + matrix[row2][new_col2]
     
     elif col1 == col2:
-        new_row1 = (row1 - 1) % 5
-        new_row2 = (row2 - 1) % 5
+        new_row1 = (row1 - 1 + 5) % 5
+        new_row2 = (row2 - 1 + 5) % 5
+        
+        while matrix[new_row1][col1] == '':
+            new_row1 = (new_row1 - 1 + 5) % 5
+        while matrix[new_row2][col2] == '':
+            new_row2 = (new_row2 - 1 + 5) % 5
+            
         return matrix[new_row1][col1] + matrix[new_row2][col2]
     
     else:
-        return matrix[row1][col2] + matrix[row2][col1]
+        result1 = matrix[row1][col2]
+        result2 = matrix[row2][col1]
+        
+        if result1 == '':
+            for r in range(5):
+                if matrix[r][col2] != '':
+                    result1 = matrix[r][col2]
+                    break
+        
+        if result2 == '':
+            for r in range(5):
+                if matrix[r][col1] != '':
+                    result2 = matrix[r][col1]
+                    break
+        
+        return result1 + result2
 
 
 def encrypt(plaintext, key):
@@ -151,7 +219,7 @@ def encrypt(plaintext, key):
     for pair in pairs:
         ciphertext += encrypt_pair(matrix, pair)
     
-    return ciphertext, matrix
+    return ciphertext, matrix, pairs
 
 
 def decrypt(ciphertext, key):
@@ -161,14 +229,23 @@ def decrypt(ciphertext, key):
     if not validate_input(ciphertext):
         raise ValueError("Textul conține caractere invalide! Folosiți doar A-Z, Ă, Â, Î, Ș, Ț")
     
-    pairs = [ciphertext[i:i+2] for i in range(0, len(ciphertext), 2)]
+    if len(ciphertext) % 2 != 0:
+        print(f"Atenție: Criptograma are {len(ciphertext)} caractere (număr impar).")
+        print("Aceasta nu este o criptogramă Playfair validă.")
+        print("Playfair produce întotdeauna un număr par de caractere.")
+        ciphertext += 'X' 
+        print(f"Am adăugat X la sfârșit: {ciphertext}")
+    
+    pairs = []
+    for i in range(0, len(ciphertext), 2):
+        pairs.append(ciphertext[i:i+2])
     
     plaintext = ''
     for pair in pairs:
-        if len(pair) == 2:
-            plaintext += decrypt_pair(matrix, pair)
+        plaintext += decrypt_pair(matrix, pair)
     
-    return plaintext, matrix
+    cleaned_plaintext = clean_decrypted_text(plaintext)
+    return cleaned_plaintext, matrix
 
 
 def display_matrix(matrix):
@@ -186,6 +263,8 @@ def main():
     print(f"Alfabet: {''.join(ALPHABET)}")
     print("=" * 50)
     
+    history = []
+    
     while True:
         print("\nAlegeți operația:")
         print("1. Criptare")
@@ -195,6 +274,26 @@ def main():
         choice = input("\nOpțiunea dvs (1/2/3): ").strip()
         
         if choice == '3':
+            print("\n" + "=" * 50)
+            print("REZUMAT SESIUNE")
+            print("=" * 50)
+            
+            if history:
+                for i, record in enumerate(history, 1):
+                    print(f"\n--- Operația {i} ---")
+                    print(f"Tip:             {record['type']}")
+                    print(f"Cheie:           {record['key']}")
+                    if record['type'] == 'Criptare':
+                        print(f"Mesaj original:  {record['plaintext']}")
+                        print(f"Text pregătit:   {record['prepared']}")
+                        print(f"Mesaj criptat:   {record['ciphertext']}")
+                    else:
+                        print(f"Criptogramă:     {record['ciphertext']}")
+                        print(f"Mesaj decriptat: {record['plaintext']}")
+            else:
+                print("\nNu au fost efectuate operații în această sesiune.")
+            
+            print("\n" + "=" * 50)
             print("La revedere!")
             break
         
@@ -208,13 +307,29 @@ def main():
             if choice == '1':
                 plaintext = input("Introduceți mesajul de criptat: ").strip()
                 
-                ciphertext, matrix = encrypt(plaintext, key)
+                matrix = create_matrix(key)
+                pairs = prepare_text(plaintext)
+                
+                ciphertext = ''
+                for pair in pairs:
+                    encrypted = encrypt_pair(matrix, pair)
+                    ciphertext += encrypted
+                
                 display_matrix(matrix)
                 
                 print(f"\n{'='*50}")
                 print(f"Mesaj original:  {plaintext}")
+                print(f"Text pregătit:   {' '.join(pairs)}")
                 print(f"Mesaj criptat:   {ciphertext}")
                 print(f"{'='*50}")
+                
+                history.append({
+                    'type': 'Criptare',
+                    'key': key,
+                    'plaintext': plaintext,
+                    'prepared': ' '.join(pairs),
+                    'ciphertext': ciphertext
+                })
                 
             else:
                 ciphertext = input("Introduceți criptograma de decriptat: ").strip()
@@ -226,7 +341,13 @@ def main():
                 print(f"Criptogramă:     {ciphertext}")
                 print(f"Mesaj decriptat: {plaintext}")
                 print(f"{'='*50}")
-                print("\nNotă: Adăugați manual spațiile în mesaj.")
+                
+                history.append({
+                    'type': 'Decriptare',
+                    'key': key,
+                    'plaintext': plaintext,
+                    'ciphertext': ciphertext
+                })
         
         except ValueError as e:
             print(f"\nEroare: {e}")
