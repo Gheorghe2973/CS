@@ -62,7 +62,7 @@ func generateRoundKeys(kPlus string) []string {
 
 	roundKeys := make([]string, 16)
 
-	// Generează cele 16 chey
+	// Generează cele 16 chei
 	for i := 0; i < 16; i++ {
 		fmt.Printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 		fmt.Printf("RUNDA %d\n", i+1)
