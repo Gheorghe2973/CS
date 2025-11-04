@@ -30,7 +30,7 @@ func applyPC2(input string) string {
 
 	result := make([]byte, 48)
 	for i, pos := range PC2 {
-		result[i] = input[pos-1] // PC-2 folosește indexare de la 1
+		result[i] = input[pos-1]
 	}
 	return string(result)
 }
@@ -48,7 +48,7 @@ func generateRoundKeys(kPlus string) []string {
 		panic("K+ trebuie să fie 56 biți")
 	}
 
-	fmt.Println("========================================")
+	fmt.Println("\n========================================")
 	fmt.Println("GENERAREA CELOR 16 CHEI DE RUNDĂ DES")
 	fmt.Println("========================================\n")
 
@@ -68,22 +68,18 @@ func generateRoundKeys(kPlus string) []string {
 		fmt.Printf("RUNDA %d\n", i+1)
 		fmt.Printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 
-		// Numărul de shifturi pentru această rundă
 		shifts := shiftSchedule[i]
 		fmt.Printf("Număr de shifturi: %d\n\n", shifts)
 
-		// Aplică left shift
 		C = leftShift(C, shifts)
 		D = leftShift(D, shifts)
 
 		fmt.Printf("C₍%d₎ după shift: %s\n", i+1, formatBits(C, 28))
 		fmt.Printf("D₍%d₎ după shift: %s\n\n", i+1, formatBits(D, 28))
 
-		// Concatenează C și D
 		CD := C + D
 		fmt.Printf("C₍%d₎D₍%d₎ (56 biți): %s\n\n", i+1, i+1, formatBits(CD, 56))
 
-		// Aplică PC-2 pentru a obține cheia de rundă
 		Ki := applyPC2(CD)
 		roundKeys[i] = Ki
 
@@ -138,9 +134,14 @@ func bitsToHex(bits string) string {
 	return result.String()
 }
 
-// Funcție pentru a genera K+ aleatoriu
-func generateRandomKPlus() string {
-	return "11110000110011001010101011110101010101100110011110001111"
+// Funcție pentru validarea input-ului (doar 0 și 1)
+func validateBinaryString(input string) bool {
+	for _, char := range input {
+		if char != '0' && char != '1' {
+			return false
+		}
+	}
+	return true
 }
 
 func main() {
@@ -149,8 +150,45 @@ func main() {
 	fmt.Println("║     Sarcina 2.5: Generarea tuturor celor 16 chei Ki       ║")
 	fmt.Println("╚════════════════════════════════════════════════════════════╝\n")
 
-	kPlus := generateRandomKPlus()
+	var kPlus string
+	var choice int
 
+	fmt.Println("Alegeți opțiunea:")
+	fmt.Println("1. Introduceți K+ manual")
+	fmt.Println("2. Folosiți K+ predefinit pentru demonstrație")
+	fmt.Print("\nOpțiunea dvs (1/2): ")
+	fmt.Scanln(&choice)
+
+	if choice == 1 {
+		fmt.Println("\n" + strings.Repeat("─", 60))
+		fmt.Println("Introduceți K+ (56 biți - doar 0 și 1, fără spații)")
+		fmt.Println("Exemplu: 11110000110011001010101011110101010101100110011110001111")
+		fmt.Println(strings.Repeat("─", 60))
+		fmt.Print("\nK+ = ")
+		fmt.Scanln(&kPlus)
+
+		// Validare
+		if len(kPlus) != 56 {
+			fmt.Printf("\n❌ EROARE: K+ trebuie să aibă exact 56 biți (ați introdus %d biți)\n", len(kPlus))
+			return
+		}
+
+		if !validateBinaryString(kPlus) {
+			fmt.Println("\n❌ EROARE: K+ trebuie să conțină doar cifre 0 și 1")
+			return
+		}
+
+		fmt.Println("\n✓ K+ valid!")
+
+	} else if choice == 2 {
+		kPlus = "11110000110011001010101011110101010101100110011110001111"
+		fmt.Println("\n✓ Se folosește K+ predefinit pentru demonstrație")
+	} else {
+		fmt.Println("\n❌ Opțiune invalidă!")
+		return
+	}
+
+	// Generează cheile de rundă
 	roundKeys := generateRoundKeys(kPlus)
 
 	// Rezumat final
