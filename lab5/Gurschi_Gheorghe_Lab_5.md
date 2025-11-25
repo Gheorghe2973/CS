@@ -38,6 +38,381 @@ The laboratory requires implementation of a complete PKI system with the followi
 
 ---
 
+
+## Usage Examples and Terminal Output
+
+### 1. Initialize Certificate Authority
+
+**Input:**
+
+```bash
+go run main.go init-ca
+```
+
+**Output:**
+
+```
+Using: OpenSSL 3.0.2 15 Mar 2022
+
+=== Initializing Certificate Authority ===
+
+Step 1: Generating CA private key (4096 bits)...
+✓ CA private key saved to: ./pki/ca/ca-key.pem
+
+Step 2: Creating self-signed CA certificate (valid for 10 years)...
+✓ CA certificate saved to: ./pki/ca/ca-cert.pem
+
+CA Certificate Details:
+subject=C = MD, O = TUM PKI Lab, OU = Certificate Authority, CN = TUM Root CA
+notBefore=Nov 26 10:00:00 2024 GMT
+notAfter=Nov 24 10:00:00 2034 GMT
+issuer=C = MD, O = TUM PKI Lab, OU = Certificate Authority, CN = TUM Root CA
+
+✓ Certificate Authority initialized successfully!
+```
+
+---
+
+### 2. Issue User Certificate
+
+**Input:**
+
+```bash
+go run main.go issue alice
+```
+
+**Output:**
+
+```
+=== Issuing Certificate for User: alice ===
+
+Step 1: Generating user private key (2048 bits)...
+✓ User private key saved to: ./pki/users/alice/alice-key.pem
+
+Step 2: Creating Certificate Signing Request (CSR)...
+✓ CSR saved to: ./pki/users/alice/alice-csr.pem
+
+Step 3: Signing certificate with CA (valid for 365 days)...
+✓ User certificate saved to: ./pki/users/alice/alice-cert.pem
+
+User Certificate Details:
+subject=C = MD, O = TUM PKI Lab, OU = Users, CN = alice
+notBefore=Nov 26 10:15:00 2024 GMT
+notAfter=Nov 26 10:15:00 2025 GMT
+serial=1A2B3C4D5E6F7890
+
+Step 4: Verifying certificate chain...
+./pki/users/alice/alice-cert.pem: OK
+
+✓ User certificate issued successfully!
+```
+
+---
+
+### 3. Sign a File
+
+**Input:**
+
+```bash
+echo "Important document content" > document.txt
+go run main.go sign alice document.txt
+```
+
+**Output:**
+
+```
+=== Signing File: document.txt ===
+User: alice
+
+Step 1: Computing SHA-256 hash and signing...
+✓ Signature saved to: document.txt.sig
+
+Step 2: Displaying file hash...
+SHA256(document.txt)= a3b4c5d6e7f89012345678901234567890abcdef1234567890abcdef12345678
+
+✓ File signed successfully!
+```
+
+---
+
+### 4. Verify File Signature (Valid)
+
+**Input:**
+
+```bash
+go run main.go verify alice document.txt
+```
+
+**Output:**
+
+```
+=== Verifying Signature for File: document.txt ===
+User: alice
+
+Step 1: Extracting public key from certificate...
+✓ Public key extracted to: ./pki/users/alice/alice-pubkey.pem
+
+Step 2: Verifying signature...
+Verified OK
+✓ Signature verification PASSED!
+```
+
+---
+
+### 5. Verify File Signature (Invalid - Modified File)
+
+**Input:**
+
+```bash
+echo "Modified content" > document.txt
+go run main.go verify alice document.txt
+```
+
+**Output:**
+
+```
+=== Verifying Signature for File: document.txt ===
+User: alice
+
+Step 1: Extracting public key from certificate...
+✓ Public key extracted to: ./pki/users/alice/alice-pubkey.pem
+
+Step 2: Verifying signature...
+✗ Signature verification FAILED!
+Error: Verification failure
+Error: signature verification failed
+```
+
+---
+
+### 6. List All Certificates
+
+**Input:**
+
+```bash
+go run main.go list
+```
+
+**Output:**
+
+```
+=== Issued Certificates ===
+
+User: alice
+  subject=C = MD, O = TUM PKI Lab, OU = Users, CN = alice
+  notBefore=Nov 26 10:15:00 2024 GMT
+  notAfter=Nov 26 10:15:00 2025 GMT
+  serial=1A2B3C4D5E6F7890
+
+User: bob
+  subject=C = MD, O = TUM PKI Lab, OU = Users, CN = bob
+  notBefore=Nov 26 10:20:00 2024 GMT
+  notAfter=Nov 26 10:20:00 2025 GMT
+  serial=7G8H9I0J1K2L3M4N
+
+User: charlie
+  subject=C = MD, O = TUM PKI Lab, OU = Users, CN = charlie
+  notBefore=Nov 26 10:25:00 2024 GMT
+  notAfter=Nov 26 10:25:00 2025 GMT
+  serial=5O6P7Q8R9S0T1U2V
+```
+
+---
+
+### 7. Revoke Certificate
+
+**Input:**
+
+```bash
+go run main.go revoke alice
+```
+
+**Output:**
+
+```
+=== Revoking Certificate for User: alice ===
+
+Step 1: Getting certificate serial number...
+✓ Certificate serial: 1A2B3C4D5E6F7890
+
+Step 2: Adding to revocation list...
+✓ CRL saved to: ./pki/ca/crl.pem
+
+✓ Certificate revoked successfully!
+```
+
+---
+
+### 8. Issue Another User Certificate
+
+**Input:**
+
+```bash
+go run main.go issue bob
+```
+
+**Output:**
+
+```
+=== Issuing Certificate for User: bob ===
+
+Step 1: Generating user private key (2048 bits)...
+✓ User private key saved to: ./pki/users/bob/bob-key.pem
+
+Step 2: Creating Certificate Signing Request (CSR)...
+✓ CSR saved to: ./pki/users/bob/bob-csr.pem
+
+Step 3: Signing certificate with CA (valid for 365 days)...
+✓ User certificate saved to: ./pki/users/bob/bob-cert.pem
+
+User Certificate Details:
+subject=C = MD, O = TUM PKI Lab, OU = Users, CN = bob
+notBefore=Nov 26 10:30:00 2024 GMT
+notAfter=Nov 26 10:30:00 2025 GMT
+serial=7G8H9I0J1K2L3M4N
+
+Step 4: Verifying certificate chain...
+./pki/users/bob/bob-cert.pem: OK
+
+✓ User certificate issued successfully!
+```
+
+---
+
+### 9. Sign Multiple Files
+
+**Input:**
+
+```bash
+echo "Report Q1" > report1.txt
+echo "Report Q2" > report2.txt
+go run main.go sign bob report1.txt
+go run main.go sign bob report2.txt
+```
+
+**Output for report1.txt:**
+
+```
+=== Signing File: report1.txt ===
+User: bob
+
+Step 1: Computing SHA-256 hash and signing...
+✓ Signature saved to: report1.txt.sig
+
+Step 2: Displaying file hash...
+SHA256(report1.txt)= 9f8e7d6c5b4a39281726354...
+
+✓ File signed successfully!
+```
+
+**Output for report2.txt:**
+
+```
+=== Signing File: report2.txt ===
+User: bob
+
+Step 1: Computing SHA-256 hash and signing...
+✓ Signature saved to: report2.txt.sig
+
+Step 2: Displaying file hash...
+SHA256(report2.txt)= 1a2b3c4d5e6f708192a3b4c...
+
+✓ File signed successfully!
+```
+
+---
+
+### 10. Display Help/Usage
+
+**Input:**
+
+```bash
+go run main.go
+```
+
+**Output:**
+
+```
+Using: OpenSSL 3.0.2 15 Mar 2022
+PKI System - Public Key Infrastructure with Digital Signatures using OpenSSL
+
+Usage:
+  go run main.go <command> [arguments]
+
+Commands:
+  init-ca                       Initialize Certificate Authority
+  issue <username>              Issue certificate for a user
+  revoke <username>             Revoke user certificate
+  list                          List all issued certificates
+  sign <username> <file>        Sign a file with digital signature
+  verify <username> <file>      Verify file signature
+
+Examples:
+  go run main.go init-ca
+  go run main.go issue alice
+  go run main.go sign alice document.txt
+  go run main.go verify alice document.txt
+  go run main.go revoke alice
+  go run main.go list
+
+Requirements:
+  - OpenSSL must be installed on your system
+  - CA key size: 4096 bits, validity: 10 years
+  - User key size: 2048 bits, validity: 365 days
+```
+
+---
+
+### 11. Error Cases
+
+**Attempting to issue duplicate user:**
+
+**Input:**
+
+```bash
+go run main.go issue alice
+```
+
+**Output:**
+
+```
+Error: user 'alice' already exists
+```
+
+---
+
+**Attempting to sign without certificate:**
+
+**Input:**
+
+```bash
+go run main.go sign nonexistent document.txt
+```
+
+**Output:**
+
+```
+Error: user 'nonexistent' not found. Issue certificate first
+```
+
+---
+
+**Attempting to verify non-existent signature:**
+
+**Input:**
+
+```bash
+go run main.go verify bob unsigned.txt
+```
+
+**Output:**
+
+```
+Error: signature file 'unsigned.txt.sig' not found
+```
+
+
+
 ## Implementation
 
 ### Architecture
