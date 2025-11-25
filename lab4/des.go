@@ -134,7 +134,7 @@ func bitsToHex(bits string) string {
 	return result.String()
 }
 
-// Funcție pentru validarea input-ului (doar 0 și 1)
+// Funcție pentru validarea input-ului
 func validateBinaryString(input string) bool {
 	for _, char := range input {
 		if char != '0' && char != '1' {
