@@ -1,4 +1,4 @@
-# Laboratory Work No. 4
+# Laboratory Work No. 5
 
 ## Public Key Infrastructure (PKI) and Digital Signature Algorithm (DSA)
 
