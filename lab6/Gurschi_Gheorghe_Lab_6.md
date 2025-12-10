@@ -6,14 +6,6 @@
 **Catalog Number:** 15
 **Group:** FAF-231
 
-## Table of Contents
-
-1. [Purpose of the Work](#1-purpose-of-the-work)
-2. [Determining Hash Functions](#2-determining-hash-functions)
-3. [Task 2: RSA Digital Signature](#3-task-2-rsa-digital-signature)
-4. [Task 3: ElGamal Digital Signature](#4-task-3-elgamal-digital-signature)
-5. [Results and Conclusions](#5-results-and-conclusions)
-
 ## 1. Purpose of the Work
 
 The purpose of this laboratory work is to implement and test digital signatures using two fundamental cryptographic algorithms:
@@ -23,67 +15,7 @@ The purpose of this laboratory work is to implement and test digital signatures 
 
 Both signatures are applied to the decrypted message from Laboratory 2, using cryptographic hash functions to ensure message integrity and authenticity.
 
----
-
-## 2. Determining Hash Functions
-
-### 2.1 Calculation Formula
-
-To determine the correct hash function, I used the formula specified in the requirements:
-
-```
-i = (k mod 24) + 1
-```
-
-where:
-
-* **k** = catalog order number = **15**
-* **i** = hash function index from the list
-
-### 2.2 Calculation
-
-```
-i = (15 mod 24) + 1
-i = 15 + 1
-i = 16
-```
-
-### 2.3 Selected Hash Functions
-
-#### For Task 2 (RSA)
-
-* **RSA list, position 16:** RipeMD-128
-
-#### For Task 3 (ElGamal)
-
-* **ElGamal list, position 16:** SHA3-512
-
-### 2.4 Calculated Hashes
-
-#### RIPEMD-128 (for RSA)
-
-```
-Message: decrypted text from Laboratory 2 (4093 characters)
-Hash (hexadecimal): 29f4c31d4911700655bcac70b51bcd36
-Hash (decimal):     55769225650766960197612177446919720246
-Length:             128 bits (16 bytes)
-```
-
-#### SHA3-512 (for ElGamal)
-
-```
-Message: decrypted text from Laboratory 2 (4093 characters)
-Hash (hexadecimal): bcc0a3f43a0991cfa3af12ec3480b05e3563922d46bb8145c4642bab5dbcb37c
-                    8064717a4020bef8d5aa633aecfb0d97d0b63035e0965437396ba0eb9330b406
-Hash (decimal):     988577066258422930429424966945508045934567976924654457198754843008145
-                    849821114647596806617473871820359356086010062007128745611226946893516
-                    1905048034784262
-Length:             512 bits (64 bytes)
-```
-
----
-
-## 3. Task 2: RSA Digital Signature
+## 2. Task 2: RSA Digital Signature
 
 ### 3.1 RSA Algorithm Description
 
@@ -247,7 +179,7 @@ Thus, if the signature is valid, we recover the original hash.
 
 ---
 
-## 4. Task 3: ElGamal Digital Signature
+## 3. Task 3: ElGamal Digital Signature
 
 ### 4.1 ElGamal Algorithm Description
 
@@ -496,7 +428,7 @@ Thus, the verification equation is satisfied if and only if the signature is val
 
 ---
 
-## 5. Results and Conclusions
+## 4. Results and Conclusions
 
 ### 5.1 Obtained Results
 
@@ -686,3 +618,5 @@ Digital signatures are essential in:
 * **Blockchain**: Transaction validation
 * **Secure email**: S/MIME, PGP
 * **Authentication**: Digital certificates, tokens
+
+**\*\***Repository GitHub:**\*\*** **[**https://github.com/Gheorghe2973/CS**](**https://github.com/Gheorghe2973/CS**)**
